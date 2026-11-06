@@ -1,0 +1,16 @@
+{
+  "name": "خلّيني أكمّل كلامي · CodeHer",
+  "short_name": "CodeHer Booth",
+  "description": "بوث نادي CodeHer لليوم العالمي للتوعية بالتأتأة",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "background_color": "#F8F9FC",
+  "theme_color": "#FF0092",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

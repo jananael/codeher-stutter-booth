@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>خلّيني أكمّل كلامي · CodeHer</title>
+  <link rel="icon" href="assets/codeher-logo.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- النصوص واللغة قبل الرسم، عشان الاتجاه (RTL/LTR) يكون صح من أول لحظة -->
+  <script src="js/content.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <img class="topbar__logo" src="assets/codeher-logo.png" alt="CodeHer" id="logo" draggable="false">
+    <p class="topbar__occasion" id="occasion"></p>
+    <div class="lang" id="langSwitch" role="group">
+      <button type="button" data-lang="ar" lang="ar">عربي</button>
+      <button type="button" data-lang="en" lang="en">EN</button>
+    </div>
+    <button type="button" class="btn btn--ghost topbar__home" id="homeBtn" hidden></button>
+  </header>
+
+  <main id="main">
+    <!-- الرئيسية -->
+    <section class="screen screen--home is-active" id="screen-home" data-screen="home" aria-labelledby="homeTitle">
+      <div class="home" id="home">
+        <h1 class="home__title" id="homeTitle" tabindex="-1">
+          <span class="accent" id="homeTitleHighlight"></span><span id="homeTitleRest"></span>
+        </h1>
+        <p class="home__subtitle" id="homeSubtitle"></p>
+        <p class="home__phrase" id="attractPhrase" aria-live="off" hidden></p>
+        <canvas class="wave wave--home" id="homeWave" aria-hidden="true"></canvas>
+        <div class="home__cards" id="homeCards"></div>
+        <button type="button" class="btn btn--primary btn--huge home__cta" id="attractCta" hidden></button>
+        <!-- QR النصائح على الرئيسية: بيبين بس إذا assets/tips-qr.png موجود -->
+        <figure class="qr qr--home" hidden>
+          <img class="qr__img" alt="">
+          <figcaption class="qr__caption"></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- المحطة ١ -->
+    <section class="screen" id="screen-daf" data-screen="daf" aria-labelledby="dafTitle" hidden>
+      <div class="daf">
+        <div class="daf__info">
+          <h2 class="screen__title" id="dafTitle" tabindex="-1"></h2>
+          <p class="lead" id="dafIntro"></p>
+          <ol class="steps" id="dafSteps"></ol>
+          <p class="callout" id="dafWarning"></p>
+        </div>
+
+        <div class="card daf__card">
+          <p class="daf__label" id="dafReadLabel"></p>
+          <p class="daf__sentence" id="dafSentence"></p>
+
+          <div class="waves">
+            <div class="waves__row">
+              <span class="waves__label" id="dafWaveInLabel"></span>
+              <canvas class="wave wave--live" id="dafWaveIn" aria-hidden="true"></canvas>
+            </div>
+            <div class="waves__gap">
+              <span class="delay-badge" id="dafDelayBadge"><b id="dafDelayMs"></b><span id="dafDelayDesc"></span></span>
+            </div>
+            <div class="waves__row">
+              <span class="waves__label waves__label--out" id="dafWaveOutLabel"></span>
+              <canvas class="wave wave--live" id="dafWaveOut" aria-hidden="true"></canvas>
+            </div>
+          </div>
+
+          <div class="daf__actions">
+            <button type="button" class="btn btn--primary" id="dafToggle"></button>
+            <button type="button" class="btn btn--secondary" id="dafNext"></button>
+          </div>
+
+          <div class="daf__delay">
+            <span class="daf__delay-label" id="dafModeLabel"></span>
+            <div class="segmented" id="dafModes" role="group"></div>
+          </div>
+          <div class="daf__delay" id="dafIntensityRow">
+            <span class="daf__delay-label" id="dafIntensityLabel"></span>
+            <div class="segmented" id="dafIntensity" role="group"></div>
+          </div>
+          <div class="daf__delay" id="dafDelayRow">
+            <span class="daf__delay-label" id="dafDelayLabel"></span>
+            <div class="segmented" id="dafDelays" role="group"></div>
+          </div>
+          <p class="daf__note" id="dafModeNote"></p>
+
+          <p class="status" id="dafStatus" role="status" aria-live="polite"></p>
+
+          <div class="reflection" id="dafReflection" hidden>
+            <p class="reflection__q" id="dafReflectQ"></p>
+            <div class="reflection__options" id="dafReflectOptions" role="group"></div>
+            <p class="reflection__msg" id="dafReflectMsg" hidden></p>
+          </div>
+
+          <!-- قارن حالك -->
+          <button type="button" class="btn btn--secondary compare__open" id="cmpOpen"></button>
+          <div class="compare" id="cmpPanel" hidden>
+            <div class="compare__head">
+              <h3 class="compare__title" id="cmpTitle"></h3>
+              <span class="compare__step" id="cmpStep"></span>
+            </div>
+            <div id="cmpRun">
+              <p class="compare__intro" id="cmpIntro"></p>
+              <p class="compare__mode" id="cmpMode"></p>
+              <div class="level" aria-hidden="true"><span id="cmpLevel"></span></div>
+              <p class="status" id="cmpStatus" role="status" aria-live="polite"></p>
+              <div class="compare__actions">
+                <button type="button" class="btn btn--primary" id="cmpGo"></button>
+                <button type="button" class="btn btn--secondary" id="cmpCancel"></button>
+              </div>
+            </div>
+            <div id="cmpResult" hidden>
+              <table class="compare__table">
+                <thead><tr><th></th><th id="cmpColNone"></th><th id="cmpColDelay"></th></tr></thead>
+                <tbody>
+                  <tr><th id="cmpRowTime"></th><td id="cmpT0"></td><td id="cmpT1"></td></tr>
+                  <tr><th id="cmpRowPauses"></th><td id="cmpP0"></td><td id="cmpP1"></td></tr>
+                </tbody>
+              </table>
+              <p class="compare__verdict" id="cmpVerdict"></p>
+              <p class="compare__msg" id="cmpMsg"></p>
+              <p class="compare__note" id="cmpNote"></p>
+              <div class="compare__actions">
+                <button type="button" class="btn btn--primary" id="cmpAgain"></button>
+                <button type="button" class="btn btn--secondary" id="cmpClose"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- المحطة ٢ -->
+    <section class="screen" id="screen-quiz" data-screen="quiz" aria-labelledby="quizTitle" hidden>
+      <div class="quiz">
+        <div class="quiz__head">
+          <h2 class="screen__title" id="quizTitle" tabindex="-1"></h2>
+          <p class="quiz__counter" id="quizCounter"></p>
+        </div>
+        <div class="progress" id="quizProgress" aria-hidden="true"></div>
+
+        <p class="quiz__statement" id="quizStatement" aria-live="polite"></p>
+
+        <div class="quiz__choices">
+          <button type="button" class="choice choice--fact" id="choiceFact" data-answer="fact"></button>
+          <button type="button" class="choice choice--myth" id="choiceMyth" data-answer="myth"></button>
+        </div>
+
+        <div class="explain" id="quizExplain" hidden>
+          <p class="explain__verdict" id="quizVerdict"></p>
+          <p class="explain__text" id="quizExplanation"></p>
+          <button type="button" class="btn btn--primary" id="quizNext"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- المحطة ٣: تحدّي الصبر -->
+    <section class="screen" id="screen-game" data-screen="game" aria-labelledby="gameTitle" hidden>
+      <div class="game">
+        <div class="game__head">
+          <h2 class="screen__title" id="gameTitle" tabindex="-1"></h2>
+          <p class="quiz__counter" id="gameRound"></p>
+        </div>
+
+        <div class="game__intro card" id="gameIntro">
+          <p class="lead" id="gameIntroText"></p>
+          <button type="button" class="btn btn--primary" id="gameStart"></button>
+        </div>
+
+        <div id="gamePlay" hidden>
+          <div class="progress" id="gameProgress" aria-hidden="true"></div>
+
+          <div class="speaker">
+            <span class="speaker__avatar" id="gameAvatar" aria-hidden="true"></span>
+            <p class="speaker__who"><strong id="gameName"></strong> · <span id="gameWhere"></span></p>
+            <p class="meter" id="gameMeter" hidden><span class="meter__ring" aria-hidden="true"></span><span id="gameMeterText"></span></p>
+          </div>
+          <p class="bubble" id="gameBubble" aria-live="polite"></p>
+          <p class="status" id="gameHint" role="status" aria-live="polite"></p>
+
+          <div class="tempt" id="gameTempt" role="group">
+            <button type="button" class="tempt__btn" data-type="complete"></button>
+            <button type="button" class="tempt__btn" data-type="know"></button>
+            <button type="button" class="tempt__btn" data-type="takeTime"></button>
+            <button type="button" class="tempt__btn" data-type="hurry"></button>
+          </div>
+          <button type="button" class="btn btn--primary game__reply" id="gameReply" hidden></button>
+
+          <div class="explain" id="gameFeedback" hidden>
+            <p class="explain__verdict" id="gameVerdict"></p>
+            <p class="explain__text" id="gameFeedbackText"></p>
+            <button type="button" class="btn btn--primary" id="gameNext"></button>
+          </div>
+        </div>
+
+        <div class="game__end" id="gameEnd" hidden>
+          <h3 class="game__headline" id="gameEndTitle" tabindex="-1"></h3>
+          <p class="game__quote" id="gameQuote"></p>
+          <p class="result__score" id="gameScore"></p>
+          <p class="game__score-label" id="gameScoreLabel"></p>
+          <p class="result__message" id="gameMessage"></p>
+          <div class="result__actions">
+            <button type="button" class="btn btn--primary" id="gameAgain"></button>
+            <button type="button" class="btn btn--secondary" id="gameToQuiz"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- النتيجة -->
+    <section class="screen" id="screen-result" data-screen="result" aria-labelledby="resultTitle" hidden>
+      <div class="result">
+        <h2 class="screen__title" id="resultTitle" tabindex="-1"></h2>
+        <p class="result__score" id="resultScore"></p>
+        <p class="result__message" id="resultMessage"></p>
+        <p class="result__bonus" id="resultBonus" hidden></p>
+
+        <h3 class="result__tips-title" id="tipsTitle"></h3>
+        <ul class="tips" id="tips"></ul>
+
+        <figure class="qr" hidden>
+          <img class="qr__img" alt="">
+          <figcaption class="qr__caption"></figcaption>
+        </figure>
+
+        <div class="result__actions">
+          <button type="button" class="btn btn--primary" id="playAgain"></button>
+          <button type="button" class="btn btn--secondary" id="goDaf"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- شاشة النهاية المشتركة (بس إذا خلّص المحطات الثلاث بنفس الجلسة) -->
+    <section class="screen" id="screen-finale" data-screen="finale" aria-labelledby="finaleTitle" hidden>
+      <div class="finale">
+        <img class="finale__logo" src="assets/codeher-logo.png" alt="CodeHer">
+        <p class="finale__kicker" id="finaleKicker" lang="en" dir="ltr"></p>
+        <h2 class="finale__title" id="finaleTitle" tabindex="-1"></h2>
+        <p class="finale__stations" id="finaleStations"></p>
+        <p class="finale__message" id="finaleMessage"></p>
+        <figure class="qr" hidden>
+          <img class="qr__img" alt="">
+          <figcaption class="qr__caption"></figcaption>
+        </figure>
+        <button type="button" class="btn btn--primary btn--huge" id="finaleRestart"></button>
+      </div>
+    </section>
+  </main>
+
+  <!-- بيظهر لما الزائر يخلّص المحطة الثالثة -->
+  <div class="finale-bar" id="finaleBar" role="status" hidden>
+    <span id="finaleBarText"></span>
+    <button type="button" class="btn btn--primary" id="finaleBarBtn"></button>
+  </div>
+
+  <!-- لوحة الإحصائيات (للمنظمين) -->
+  <div class="stats-panel" id="statsPanel" role="dialog" aria-modal="true" aria-labelledby="statsTitle" hidden>
+    <div class="stats-panel__box">
+      <h2 class="stats-panel__title" id="statsTitle"></h2>
+      <p class="stats-panel__note" id="statsNote"></p>
+      <div class="stats-grid" id="statsGrid"></div>
+      <h3 class="stats-panel__sub" id="statsFeelingsTitle"></h3>
+      <ul class="stats-feelings" id="statsFeelings"></ul>
+      <div class="stats-panel__actions">
+        <button type="button" class="btn btn--primary" id="statsClose"></button>
+        <button type="button" class="btn btn--secondary" id="statsSound"></button>
+        <button type="button" class="btn btn--secondary" id="statsReset"></button>
+      </div>
+      <p class="stats-panel__note" id="statsSoundHint" hidden></p>
+    </div>
+  </div>
+
+  <script src="js/stats.js"></script>
+  <script src="js/daf.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/voices.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

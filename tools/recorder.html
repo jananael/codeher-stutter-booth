@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>تسجيل أصوات تحدّي الصبر · CodeHer</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/content.js"></script>
+  <style>
+    body { background: var(--page); }
+    .rec { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+    .rec h1 { font-size: clamp(26px, 3vw, 38px); }
+    .rec__top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .howto { margin: 16px 0; padding: 16px 20px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+    .howto ol { margin: 0; padding-inline-start: 26px; line-height: 2; list-style: arabic-indic; }
+    .progressline { font-weight: 700; color: var(--pink-dark); }
+    .person { margin-top: 22px; padding: 18px 20px; background: var(--bg); border: 2px solid var(--line); border-radius: var(--radius); }
+    .person h2 { font-size: 1.4em; }
+    .person h2 small { color: var(--muted); font-weight: 500; font-size: .7em; }
+    .seg { display: grid; grid-template-columns: 1fr auto; gap: 10px 16px; align-items: center; padding: 12px 0; border-top: 1px dashed var(--line); }
+    .seg:first-of-type { border-top: 0; }
+    .seg__text { font-size: 1.25em; font-weight: 700; line-height: 1.6; }
+    .seg__text small { display: block; color: var(--muted); font-weight: 500; font-size: .65em; }
+    .seg__btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .seg__btns .btn { min-height: 48px; padding: 6px 18px; font-size: 1em; }
+    .seg__state { min-width: 92px; font-weight: 700; font-size: .95em; color: var(--muted); }
+    .seg.is-done .seg__state { color: var(--fact); }
+    .seg.is-rec { background: var(--pink-tint); border-radius: 12px; padding-inline: 12px; }
+    .seg.is-rec .seg__state { color: var(--pink-dark); }
+    .pause { padding: 8px 0; color: var(--muted); font-weight: 500; }
+    .pause span { display: inline-block; padding: 2px 12px; border-radius: 999px; background: var(--bg-soft); border: 1px solid var(--line); }
+    .err { color: var(--pink-dark); font-weight: 700; margin-top: 10px; }
+    @media (max-width: 640px) { .seg { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="rec">
+    <div class="rec__top">
+      <h1>🎙️ تسجيل أصوات «تحدّي الصبر»</h1>
+      <div class="lang" id="langSwitch">
+        <button type="button" data-lang="ar">عربي</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+    </div>
+
+    <div class="howto">
+      <ol>
+        <li>سجّلوا بمكان هادي، والأحسن سماعات فيها مايك.</li>
+        <li>كل شخص بيسجّل مقاطعه: اضغط <b>● سجّل</b>، احكي المقطع <b>بشكل طبيعي وفوراً</b>، واضغط <b>■ وقّف</b> أول ما تخلص.</li>
+        <li>اسمع التسجيل بـ <b>▶ اسمع</b>. إذا مش عاجبك، سجّل مرة ثانية فوقه.</li>
+        <li><b>الوقفات ما بتتسجّل</b>، اللعبة بتعمل سكوت مكانها لحالها.</li>
+        <li>مقاطع التكرار (زي «كـ.. كـ..») <b>اختيارية</b>. إذا ما سجّلتوها بتبين مكتوبة بس.</li>
+      </ol>
+      <p class="progressline" id="progress"></p>
+      <p class="err" id="err" hidden></p>
+    </div>
+
+    <div id="list"></div>
+  </main>
+
+  <script src="../js/voices.js"></script>
+  <script>
+    (function () {
+      const C = window.CONTENT;
+      document.title = 'تسجيل أصوات تحدّي الصبر · CodeHer';
+      const lang = window.LANG;
+      const list = document.getElementById('list');
+      const errEl = document.getElementById('err');
+      const ar = n => lang === 'ar' ? String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]) : String(n);
+      let clips = {}, files = {}, stream = null, recorder = null, recording = null;
+
+      // اللغة
+      document.querySelectorAll('#langSwitch button').forEach(b => {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+        b.addEventListener('click', () => {
+          try { localStorage.setItem('booth-lang', b.dataset.lang); } catch (e) {}
+          location.reload();
+        });
+      });
+
+      function showError(t) { errEl.textContent = t; errEl.hidden = !t; }
+
+      async function loadManifest() {
+        try {
+          const r = await fetch('../assets/voices/manifest.json?' + Date.now());
+          const m = r.ok ? await r.json() : {};
+          clips = m.clips || {}; files = m.files || {};
+        } catch (e) { clips = {}; files = {}; }
+      }
+
+      function render() {
+        list.innerHTML = '';
+        let total = 0, done = 0;
+        C.game.rounds.forEach(round => {
+          const card = document.createElement('section');
+          card.className = 'person';
+          card.innerHTML = '<h2></h2>';
+          card.querySelector('h2').innerHTML = '';
+          card.querySelector('h2').append(round.name + ' ');
+          const sm = document.createElement('small'); sm.textContent = '· ' + round.where; card.querySelector('h2').append(sm);
+
+          window.Voices.segments(round, lang).forEach(seg => {
+            if (seg.type === 'pause') {
+              const p = document.createElement('div');
+              p.className = 'pause';
+              p.innerHTML = '<span></span>';
+              p.firstChild.textContent = '⏸ وقفة ' + ar((seg.ms / 1000).toFixed(1)).replace('.', lang === 'ar' ? '٫' : '.') + ' ث (سكوت، ما بتتسجّل)';
+              card.appendChild(p);
+              return;
+            }
+            const optional = seg.type === 'rep';
+            if (!optional) total++;
+            const has = Object.prototype.hasOwnProperty.call(clips, seg.id);
+            if (has && !optional) done++;
+
+            const row = document.createElement('div');
+            row.className = 'seg' + (has ? ' is-done' : '');
+            row.dataset.id = seg.id;
+            row.innerHTML =
+              '<div class="seg__text"></div>' +
+              '<div class="seg__btns">' +
+                '<button type="button" class="btn btn--primary" data-act="rec">● سجّل</button>' +
+                '<button type="button" class="btn btn--secondary" data-act="play">▶ اسمع</button>' +
+                '<span class="seg__state"></span>' +
+              '</div>';
+            const text = row.querySelector('.seg__text');
+            text.textContent = optional ? seg.text : seg.words.join(' ');
+            const small = document.createElement('small');
+            small.textContent = (optional ? 'تكرار، اختياري · ' : '') + seg.id;
+            text.appendChild(small);
+            row.querySelector('[data-act="play"]').disabled = !has;
+            row.querySelector('.seg__state').textContent = has ? '✓ ' + ar(clips[seg.id].toFixed(1)).replace('.', lang === 'ar' ? '٫' : '.') + ' ث' : (optional ? '—' : 'لسا');
+            row.querySelector('[data-act="rec"]').addEventListener('click', () => toggleRecord(row, seg.id));
+            row.querySelector('[data-act="play"]').addEventListener('click', () => {
+              new Audio('../assets/voices/' + (files[seg.id] || seg.id + '.webm') + '?' + Date.now()).play();
+            });
+            card.appendChild(row);
+          });
+          list.appendChild(card);
+        });
+        document.getElementById('progress').textContent =
+          'سجّلتوا ' + ar(done) + ' من ' + ar(total) + ' مقطع' + (done === total ? ' 🎉 خلصتوا! الأصوات جاهزة باللعبة.' : '');
+      }
+
+      async function ensureMic() {
+        if (stream) return stream;
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+        });
+        return stream;
+      }
+
+      async function toggleRecord(row, id) {
+        showError('');
+        // وقّف التسجيل الحالي
+        if (recording && recording.id === id) { recorder.stop(); return; }
+        if (recording) return;   // في تسجيل ثاني شغّال
+        try { await ensureMic(); } catch (e) {
+          showError('ما قدرنا نوصل للمايكروفون. اسمحوا بالمايك من أيقونة القفل جنب الرابط.');
+          return;
+        }
+        const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+        recorder = new MediaRecorder(stream, { mimeType: mime });
+        const chunks = [];
+        const t0 = performance.now();
+        recording = { id };
+        recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+        recorder.onstop = async () => {
+          const d = (performance.now() - t0) / 1000;
+          recording = null;
+          row.classList.remove('is-rec');
+          row.querySelector('.seg__state').textContent = 'بيحفظ...';
+          try {
+            const r = await fetch('/voices/' + id + '.webm?d=' + d.toFixed(3), { method: 'PUT', body: new Blob(chunks, { type: 'audio/webm' }) });
+            if (!r.ok) throw new Error(r.status);
+          } catch (e) {
+            showError('ما انحفظ التسجيل. تأكدوا إنه نافذة السيرفر (start-recorder.bat) لسا مفتوحة.');
+          }
+          await loadManifest();
+          render();
+        };
+        recorder.start();
+        row.classList.add('is-rec');
+        row.querySelector('[data-act="rec"]').textContent = '■ وقّف';
+        row.querySelector('.seg__state').textContent = '🔴 بيسجّل...';
+        list.querySelectorAll('[data-act="rec"]').forEach(b => { if (b.closest('.seg') !== row) b.disabled = true; });
+      }
+
+      loadManifest().then(render);
+    })();
+  </script>
+</body>
+</html>

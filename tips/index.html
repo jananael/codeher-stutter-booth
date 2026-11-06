@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FF0092">
+  <title>كيف تكون المستمع اللي بيستنى · CodeHer</title>
+  <!--
+    صفحة مستقلة للتلفون، بتنفتح من الـ QR بالبوث.
+    ارفعوا مجلد tips/ كامل على استضافة عامة (مثلاً Netlify Drop أو GitHub Pages)،
+    وبعدين اعملوا QR للرابط واحفظوه بالموقع الأساسي باسم assets/tips-qr.png
+  -->
+  <style>
+    :root {
+      --page: #F8F9FC; --bg: #FFFFFF; --soft: #FFF3F8; --pink: #FF0092; --pink-dark: #D1007A;
+      --navy: #0A1D2C; --muted: #5F6673; --line: #F1D3E2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--navy);
+      font: 17px/1.75 "IBM Plex Sans Arabic", Tahoma, "Segoe UI", system-ui, sans-serif;
+    }
+    main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+    header { text-align: center; padding: 8px 0 20px; }
+    .brand { font-weight: 700; font-size: 22px; letter-spacing: -.01em; }
+    .brand b { color: var(--pink); font-style: italic; }
+    .date { color: var(--muted); font-size: 14px; }
+    h1 { font-size: clamp(26px, 7vw, 34px); line-height: 1.35; margin: 14px 0 6px; }
+    h1 span { color: var(--pink); }
+    .lead { color: var(--muted); margin: 0; }
+    h2 { font-size: 20px; margin: 30px 0 12px; }
+    .tips { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .tip {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 4px 14px;
+      align-items: start;
+      background: var(--soft);
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .tip__num {
+      grid-row: span 2;
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--pink-dark);
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .tip h3 { margin: 0; font-size: 19px; line-height: 1.4; }
+    .tip p { margin: 0; color: var(--muted); }
+    .facts { background: var(--bg); border: 1px solid var(--line); border-radius: 18px; padding: 6px 18px; }
+    .facts p { margin: 12px 0; }
+    .facts strong { color: var(--pink-dark); }
+    .links { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .links a {
+      display: block;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .links a span { display: block; font-weight: 400; color: var(--muted); font-size: 14px; }
+    .links a:focus-visible, .links a:hover { border-color: var(--pink); outline: none; }
+    .en { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); }
+    footer { margin-top: 36px; text-align: center; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="brand">code<b>her</b></div>
+      <div class="date">٢٢ أكتوبر — اليوم العالمي للتوعية بالتأتأة</div>
+      <h1><span>خـ.. خـ..</span> خلّيني أكمّل كلامي</h1>
+      <p class="lead">شكراً إنك زرت البوث. هاي النصائح معك، عشان تكون المستمع اللي بيستنى.</p>
+    </header>
+
+    <h2>أربع أشياء بتفرق</h2>
+    <ul class="tips">
+      <li class="tip"><span class="tip__num">١</span><h3>استنى</h3><p>اعطيه الوقت الكافي يكمّل، بدون ما تقاطع.</p></li>
+      <li class="tip"><span class="tip__num">٢</span><h3>ما تكمّل عنه</h3><p>حتى لو عرفت الكلمة. الكلام كلامه.</p></li>
+      <li class="tip"><span class="tip__num">٣</span><h3>ضل متطلع فيه</h3><p>تواصل عين طبيعي بيقول: أنا سامعك ومش مستعجل.</p></li>
+      <li class="tip"><span class="tip__num">٤</span><h3>اسمع الشو مش الكيف</h3><p>ركّز على شو بيحكي، مش على طريقة حكيه.</p></li>
+    </ul>
+
+    <h2>معلومات سريعة</h2>
+    <div class="facts">
+      <p><strong>حوالي ١٪</strong> من الكبار حول العالم بيتأتئوا.</p>
+      <p>التأتأة إلها <strong>أساس عصبي ووراثي</strong>. التوتر ممكن يزيدها، بس مش هو السبب.</p>
+      <p>الشخص اللي بيتأتئ <strong>بيعرف تماماً شو بده يحكي</strong>. الكلمة بس بدها وقت.</p>
+      <p>عند الأطفال، <strong>التقييم المبكر عند أخصائي نطق</strong> بيفرق كثير.</p>
+    </div>
+
+    <h2>مصادر موثوقة</h2>
+    <ul class="links">
+      <li><a href="https://www.stutteringhelp.org" target="_blank" rel="noopener">The Stuttering Foundation<span>معلومات ونصائح للأهل والمعلمين والكبار</span></a></li>
+      <li><a href="https://www.isastutter.org" target="_blank" rel="noopener">International Stuttering Association<span>الجمعية الدولية للتأتأة واليوم العالمي للتوعية</span></a></li>
+      <li><a href="https://www.asha.org/public/speech/disorders/stuttering/" target="_blank" rel="noopener">ASHA<span>الجمعية الأمريكية للنطق والسمع</span></a></li>
+      <li><a href="https://www.nidcd.nih.gov/health/stuttering" target="_blank" rel="noopener">NIDCD (NIH)<span>المعاهد الوطنية للصحة</span></a></li>
+    </ul>
+
+    <section class="en" lang="en" dir="ltr">
+      <h2>Four things that make a difference</h2>
+      <ul class="tips">
+        <li class="tip"><span class="tip__num">1</span><h3>Wait</h3><p>Give them enough time to finish, without interrupting.</p></li>
+        <li class="tip"><span class="tip__num">2</span><h3>Don’t finish for them</h3><p>Even if you know the word. Their words are theirs.</p></li>
+        <li class="tip"><span class="tip__num">3</span><h3>Keep eye contact</h3><p>Natural eye contact says: I’m listening and I’m not in a hurry.</p></li>
+        <li class="tip"><span class="tip__num">4</span><h3>Hear the what, not the how</h3><p>Focus on what they’re saying, not how they say it.</p></li>
+      </ul>
+    </section>
+
+    <footer>CodeHer · International Stuttering Awareness Day</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "clips": {
+    "ar-yamen-1": 3.005,
+    "ar-yamen-2": 3.943,
+    "ar-yamen-rep3": 1.004,
+    "ar-yamen-4": 1.084,
+    "ar-yamen-5": 9.976,
+    "ar-yamen-6": 0.312,
+    "ar-ahmad-1": 0.494,
+    "ar-ahmad-rep2": 0.391,
+    "ar-ahmad-3": 2.702,
+    "ar-ahmad-4": 7.273,
+    "ar-ahmad-5": 3.326,
+    "ar-ahmad-6": 4.215,
+    "ar-rami-1": 0.632,
+    "ar-rami-2": 3.472,
+    "ar-rami-3": 7.999,
+    "ar-rami-rep4": 1.435,
+    "ar-rami-5": 5.673,
+    "ar-rami-6": 2.732
+  },
+  "files": {
+    "ar-yamen-1": "ar-yamen-1.wav",
+    "ar-yamen-2": "ar-yamen-2.wav",
+    "ar-yamen-rep3": "ar-yamen-rep3.wav",
+    "ar-yamen-4": "ar-yamen-4.wav",
+    "ar-yamen-5": "ar-yamen-5.wav",
+    "ar-yamen-6": "ar-yamen-6.wav",
+    "ar-ahmad-1": "ar-ahmad-1.wav",
+    "ar-ahmad-rep2": "ar-ahmad-rep2.wav",
+    "ar-ahmad-3": "ar-ahmad-3.wav",
+    "ar-ahmad-4": "ar-ahmad-4.wav",
+    "ar-ahmad-5": "ar-ahmad-5.wav",
+    "ar-ahmad-6": "ar-ahmad-6.wav",
+    "ar-rami-1": "ar-rami-1.wav",
+    "ar-rami-2": "ar-rami-2.wav",
+    "ar-rami-3": "ar-rami-3.wav",
+    "ar-rami-rep4": "ar-rami-rep4.wav",
+    "ar-rami-5": "ar-rami-5.wav",
+    "ar-rami-6": "ar-rami-6.wav"
+  }
+}

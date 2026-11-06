@@ -1,0 +1,19 @@
+# 🔒 مفاتيح وأسرار: ما بتنرفع أبداً
+tools/elevenlabs-key.txt
+*.key
+.env
+
+# ملفات بتتولّد أو نسخ احتياطية محلية
+netlify-site/
+.netlify/
+tools/samples/
+tools/voices-*-backup/
+tools/voices-before-elevenlabs/
+
+# تسجيلات بأصوات حقيقية (خصوصية)
+tools/old-recordings/
+
+# إعدادات محلية
+.claude/
+Thumbs.db
+desktop.ini
